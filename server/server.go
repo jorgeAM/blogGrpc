@@ -15,6 +15,7 @@ type server struct{}
 func main() {
 	url := os.Getenv("GRPC_SERVER_HOST")
 	lis, err := net.Listen("tcp", url)
+	defer lis.Close()
 
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -23,6 +24,7 @@ func main() {
 	s := grpc.NewServer()
 	blogpb.RegisterBlogServiceServer(s, &server{})
 	log.Println("Serving grpc server ...")
+	defer s.Stop()
 
 	if err = s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve grpc server: %v", err)
