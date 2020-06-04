@@ -26,7 +26,14 @@ message ReadBlogResponse {
   Blog blog = 1;
 }
 
+message ListBlogsRequest {}
+
+message ListBlogsResponse {
+  Blog blog = 1;
+}
+
 service BlogService {
   rpc NewBlog (NewBlogRequest) returns (NewBlogResponse);
   rpc ReadBlog (ReadBlogRequest) returns (ReadBlogResponse);
+  rpc ListBlogs (ListBlogsRequest) returns (stream ListBlogsResponse);
 }

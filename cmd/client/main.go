@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
+	"io"
 	"log"
 	"os"
 
@@ -21,7 +22,7 @@ func main() {
 	}
 
 	c := blogpb.NewBlogServiceClient(cc)
-	readBlog(c)
+	listBlogs(c)
 }
 
 func newBlog(c blogpb.BlogServiceClient) {
@@ -52,4 +53,26 @@ func readBlog(c blogpb.BlogServiceClient) {
 	}
 
 	fmt.Println("blog: ", res.GetBlog())
+}
+
+func listBlogs(c blogpb.BlogServiceClient) {
+	stream, err := c.ListBlogs(context.Background(), &blogpb.ListBlogsRequest{})
+
+	if err != nil {
+		log.Fatalf("something wrong when call ListBlogs method: %v", err)
+	}
+
+	for {
+		res, err := stream.Recv()
+
+		if err == io.EOF {
+			break
+		}
+
+		if err != nil {
+			log.Fatalf("failed to receive blog: %v", err)
+		}
+
+		fmt.Println(res.GetBlog())
+	}
 }

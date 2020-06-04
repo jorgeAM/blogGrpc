@@ -46,7 +46,7 @@ func (s *GRPCServer) ReadBlog(ctx context.Context, req *blogpb.ReadBlogRequest) 
 	blog, err := s.DBHandler.ReadBlog(id)
 
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "we can't retrieve blog: %v", err)
+		return nil, status.Errorf(codes.NotFound, "we can't retrieve blog: %v", err)
 	}
 
 	return &blogpb.ReadBlogResponse{
@@ -57,4 +57,30 @@ func (s *GRPCServer) ReadBlog(ctx context.Context, req *blogpb.ReadBlogRequest) 
 			AuthodId: blog.AuthorID,
 		},
 	}, nil
+}
+
+// ListBlogs is a server streaming function to retrieve all blogs
+func (s *GRPCServer) ListBlogs(req *blogpb.ListBlogsRequest, stream blogpb.BlogService_ListBlogsServer) error {
+	blogs, err := s.DBHandler.ListBlogs()
+
+	if err != nil {
+		return status.Errorf(codes.Internal, "we can't retrieve blogs: %v", err)
+	}
+
+	for _, blog := range blogs {
+		res := &blogpb.ListBlogsResponse{
+			Blog: &blogpb.Blog{
+				Id:       blog.ID.Hex(),
+				Title:    blog.Title,
+				Content:  blog.Content,
+				AuthodId: blog.AuthorID,
+			},
+		}
+
+		if err = stream.Send(res); err != nil {
+			return status.Errorf(codes.DataLoss, "someting got wrong to send data: %v", err)
+		}
+	}
+
+	return nil
 }
