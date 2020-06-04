@@ -104,8 +104,16 @@ func (h *dbHandler) ListBlogs() ([]*models.Blog, error) {
 }
 
 func (h *dbHandler) UpdateBlog(blog models.Blog) (*models.Blog, error) {
-	// c := h.client.Database("blogDb").Collection("blogs")
-	return nil, nil
+	c := h.client.Database("blogDb").Collection("blogs")
+	filter := bson.D{primitive.E{Key: "_id", Value: blog.ID}}
+	updatedDocument := bson.M{"$set": &blog}
+	err := c.FindOneAndUpdate(context.Background(), filter, updatedDocument).Err()
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &blog, nil
 }
 
 func (h *dbHandler) DeleteBlog(id string) error {

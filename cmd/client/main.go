@@ -77,6 +77,25 @@ func listBlogs(c blogpb.BlogServiceClient) {
 	}
 }
 
+func updateBlog(c blogpb.BlogServiceClient, id string) {
+	req := &blogpb.UpdateBlogRequest{
+		Blog: &blogpb.Blog{
+			Id:       id,
+			Title:    "updated title",
+			Content:  "updated content",
+			AuthodId: "jorguito tu terror",
+		},
+	}
+
+	res, err := c.UpdateBlog(context.Background(), req)
+
+	if err != nil {
+		log.Fatalf("something wrong when call DeleteBlog method: %v", err)
+	}
+
+	fmt.Println(res.GetBlog())
+}
+
 func deleteBlog(c blogpb.BlogServiceClient, id string) {
 	res, err := c.DeleteBlog(context.Background(), &blogpb.DeleteBlogRequest{BlodId: id})
 

@@ -6,6 +6,7 @@ import (
 	"github.com/jorgeAM/bloGrpc/blogpb"
 	"github.com/jorgeAM/bloGrpc/db"
 	"github.com/jorgeAM/bloGrpc/models"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 )
@@ -83,6 +84,39 @@ func (s *GRPCServer) ListBlogs(req *blogpb.ListBlogsRequest, stream blogpb.BlogS
 	}
 
 	return nil
+}
+
+// UpdateBlog is a unary method to delete a blog
+func (s *GRPCServer) UpdateBlog(ctx context.Context, req *blogpb.UpdateBlogRequest) (*blogpb.UpdateBlogResponse, error) {
+	blog := req.GetBlog()
+
+	oid, err := primitive.ObjectIDFromHex(blog.Id)
+
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "We can't covert id to oid: %v", err)
+	}
+
+	data := models.Blog{
+		ID:       oid,
+		Title:    blog.GetTitle(),
+		Content:  blog.GetContent(),
+		AuthorID: blog.GetAuthodId(),
+	}
+
+	b, err := s.DBHandler.UpdateBlog(data)
+
+	if err != nil {
+		return nil, status.Errorf(codes.NotFound, "We can't update blog: %v", err)
+	}
+
+	return &blogpb.UpdateBlogResponse{
+		Blog: &blogpb.Blog{
+			Id:       b.ID.Hex(),
+			Title:    b.Title,
+			Content:  b.Content,
+			AuthodId: b.AuthorID,
+		},
+	}, nil
 }
 
 // DeleteBlog is a unary method to delete a blog
