@@ -3,7 +3,6 @@ package server
 import (
 	"context"
 
-	_ "github.com/joho/godotenv/autoload"
 	"github.com/jorgeAM/bloGrpc/blogpb"
 	"github.com/jorgeAM/bloGrpc/db"
 	"github.com/jorgeAM/bloGrpc/models"
@@ -37,6 +36,25 @@ func (s *GRPCServer) NewBlog(ctx context.Context, req *blogpb.NewBlogRequest) (*
 			Title:    b.Title,
 			Content:  b.Content,
 			AuthodId: b.AuthorID,
+		},
+	}, nil
+}
+
+// ReadBlog is a unary method to read a blog
+func (s *GRPCServer) ReadBlog(ctx context.Context, req *blogpb.ReadBlogRequest) (*blogpb.ReadBlogResponse, error) {
+	id := req.GetBlodId()
+	blog, err := s.DBHandler.ReadBlog(id)
+
+	if err != nil {
+		return nil, status.Errorf(codes.Internal, "we can't retrieve blog: %v", err)
+	}
+
+	return &blogpb.ReadBlogResponse{
+		Blog: &blogpb.Blog{
+			Id:       blog.ID.Hex(),
+			Title:    blog.Title,
+			Content:  blog.Content,
+			AuthodId: blog.AuthorID,
 		},
 	}, nil
 }

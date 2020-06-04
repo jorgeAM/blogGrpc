@@ -58,7 +58,21 @@ func (h *dbHandler) NewBlog(blog models.Blog) (*models.Blog, error) {
 }
 
 func (h *dbHandler) ReadBlog(id string) (*models.Blog, error) {
-	return nil, nil
+	c := h.client.Database("blogDb").Collection("blogs")
+	oid, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return nil, err
+	}
+
+	var blog models.Blog
+	err = c.FindOne(context.Background(), bson.D{primitive.E{Key: "_id", Value: oid}}).Decode(&blog)
+
+	if err != nil {
+		return nil, err
+	}
+
+	return &blog, nil
 }
 
 func (h *dbHandler) ListBlogs() ([]*models.Blog, error) {

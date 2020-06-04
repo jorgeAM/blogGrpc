@@ -21,7 +21,7 @@ func main() {
 	}
 
 	c := blogpb.NewBlogServiceClient(cc)
-	newBlog(c)
+	readBlog(c)
 }
 
 func newBlog(c blogpb.BlogServiceClient) {
@@ -39,4 +39,17 @@ func newBlog(c blogpb.BlogServiceClient) {
 	}
 
 	fmt.Println(res.GetBlog())
+}
+
+func readBlog(c blogpb.BlogServiceClient) {
+	req := &blogpb.ReadBlogRequest{
+		BlodId: "5ed85881ee46cf4784d586ce",
+	}
+	res, err := c.ReadBlog(context.Background(), req)
+
+	if err != nil {
+		log.Fatalf("something wrong when call ReadBlog method: %v", err)
+	}
+
+	fmt.Println("blog: ", res.GetBlog())
 }
