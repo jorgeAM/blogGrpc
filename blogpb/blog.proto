@@ -32,8 +32,17 @@ message ListBlogsResponse {
   Blog blog = 1;
 }
 
+message DeleteBlogRequest {
+  string blod_id = 1;
+}
+
+message DeleteBlogResponse {
+  bool deleted = 1;
+}
+
 service BlogService {
   rpc NewBlog (NewBlogRequest) returns (NewBlogResponse);
   rpc ReadBlog (ReadBlogRequest) returns (ReadBlogResponse);
   rpc ListBlogs (ListBlogsRequest) returns (stream ListBlogsResponse);
+  rpc DeleteBlog (DeleteBlogRequest) returns (DeleteBlogResponse);
 }

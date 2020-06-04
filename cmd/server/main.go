@@ -10,6 +10,7 @@ import (
 	"github.com/jorgeAM/bloGrpc/db/mongo"
 	"github.com/jorgeAM/bloGrpc/server"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -31,6 +32,7 @@ func main() {
 	grpcServer := server.GRPCServer{DBHandler: h}
 	s := grpc.NewServer()
 	blogpb.RegisterBlogServiceServer(s, &grpcServer)
+	reflection.Register(s)
 	log.Println("Serving grpc server ...")
 	defer s.Stop()
 

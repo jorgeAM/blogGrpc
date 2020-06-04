@@ -76,3 +76,13 @@ func listBlogs(c blogpb.BlogServiceClient) {
 		fmt.Println(res.GetBlog())
 	}
 }
+
+func deleteBlog(c blogpb.BlogServiceClient, id string) {
+	res, err := c.DeleteBlog(context.Background(), &blogpb.DeleteBlogRequest{BlodId: id})
+
+	if err != nil {
+		log.Fatalf("something wrong when call DeleteBlog method: %v", err)
+	}
+
+	fmt.Println(res.GetDeleted())
+}

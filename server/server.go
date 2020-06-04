@@ -84,3 +84,14 @@ func (s *GRPCServer) ListBlogs(req *blogpb.ListBlogsRequest, stream blogpb.BlogS
 
 	return nil
 }
+
+// DeleteBlog is a unary method to delete a blog
+func (s *GRPCServer) DeleteBlog(ctx context.Context, req *blogpb.DeleteBlogRequest) (*blogpb.DeleteBlogResponse, error) {
+	id := req.GetBlodId()
+
+	if err := s.DBHandler.DeleteBlog(id); err != nil {
+		return nil, status.Errorf(codes.NotFound, "we can't delete blog: %v", err)
+	}
+
+	return &blogpb.DeleteBlogResponse{Deleted: true}, nil
+}

@@ -79,7 +79,8 @@ func (h *dbHandler) ListBlogs() ([]*models.Blog, error) {
 	var blogs []*models.Blog
 	c := h.client.Database("blogDb").Collection("blogs")
 	ctx := context.Background()
-	cur, err := c.Find(context.Background(), bson.D{})
+	cur, err := c.Find(ctx, bson.D{})
+	defer cur.Close(ctx)
 
 	if err != nil {
 		return nil, err
@@ -91,9 +92,8 @@ func (h *dbHandler) ListBlogs() ([]*models.Blog, error) {
 
 	for cur.Next(ctx) {
 		var blog models.Blog
-		err = cur.Decode(&blog)
 
-		if err != nil {
+		if err = cur.Decode(&blog); err != nil {
 			return nil, err
 		}
 
@@ -109,5 +109,18 @@ func (h *dbHandler) UpdateBlog(blog models.Blog) (*models.Blog, error) {
 }
 
 func (h *dbHandler) DeleteBlog(id string) error {
+	c := h.client.Database("blogDb").Collection("blogs")
+	oid, err := primitive.ObjectIDFromHex(id)
+
+	if err != nil {
+		return err
+	}
+
+	err = c.FindOneAndDelete(context.Background(), bson.D{primitive.E{Key: "_id", Value: oid}}).Err()
+
+	if err != nil {
+		return err
+	}
+
 	return nil
 }
