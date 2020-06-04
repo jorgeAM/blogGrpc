@@ -18,6 +18,15 @@ message NewBlogResponse {
   Blog blog = 1;
 }
 
+message ReadBlogRequest {
+  string blod_id = 1;
+}
+
+message ReadBlogResponse {
+  Blog blog = 1;
+}
+
 service BlogService {
   rpc NewBlog (NewBlogRequest) returns (NewBlogResponse);
+  rpc ReadBlog (ReadBlogRequest) returns (ReadBlogResponse);
 }

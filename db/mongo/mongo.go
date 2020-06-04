@@ -57,6 +57,10 @@ func (h *dbHandler) NewBlog(blog models.Blog) (*models.Blog, error) {
 	return &blog, nil
 }
 
+func (h *dbHandler) ReadBlog(id string) (*models.Blog, error) {
+	return nil, nil
+}
+
 func (h *dbHandler) ListBlogs() ([]*models.Blog, error) {
 	var blogs []*models.Blog
 	c := h.client.Database("blogDb").Collection("blogs")
