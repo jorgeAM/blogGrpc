@@ -10,4 +10,14 @@ message Blog {
   string authod_id = 4;
 }
 
-service BlogService {}
+message NewBlogRequest {
+  Blog blog = 1;
+}
+
+message NewBlogResponse {
+  Blog blog = 1;
+}
+
+service BlogService {
+  rpc NewBlog (NewBlogRequest) returns (NewBlogResponse);
+}

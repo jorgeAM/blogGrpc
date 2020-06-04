@@ -1,32 +1,42 @@
-package main
+package server
 
 import (
-	"log"
-	"net"
-	"os"
+	"context"
 
 	_ "github.com/joho/godotenv/autoload"
 	"github.com/jorgeAM/bloGrpc/blogpb"
-	"google.golang.org/grpc"
+	"github.com/jorgeAM/bloGrpc/db"
+	"github.com/jorgeAM/bloGrpc/models"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
-type server struct{}
+// GRPCServer implements all methods defined in proto file
+type GRPCServer struct {
+	DBHandler db.Handler
+}
 
-func main() {
-	url := os.Getenv("GRPC_SERVER_HOST")
-	lis, err := net.Listen("tcp", url)
-	defer lis.Close()
+// NewBlog is a unary method to create a new blog
+func (s *GRPCServer) NewBlog(ctx context.Context, req *blogpb.NewBlogRequest) (*blogpb.NewBlogResponse, error) {
+	blog := req.GetBlog()
+	data := models.Blog{
+		Title:    blog.GetTitle(),
+		Content:  blog.GetContent(),
+		AuthorID: blog.GetAuthodId(),
+	}
+
+	b, err := s.DBHandler.NewBlog(data)
 
 	if err != nil {
-		log.Fatalf("failed to listen: %v", err)
+		return nil, status.Errorf(codes.Internal, "we can't create new blog: %v", err)
 	}
 
-	s := grpc.NewServer()
-	blogpb.RegisterBlogServiceServer(s, &server{})
-	log.Println("Serving grpc server ...")
-	defer s.Stop()
-
-	if err = s.Serve(lis); err != nil {
-		log.Fatalf("failed to serve grpc server: %v", err)
-	}
+	return &blogpb.NewBlogResponse{
+		Blog: &blogpb.Blog{
+			Id:       b.ID.Hex(),
+			Title:    b.Title,
+			Content:  b.Content,
+			AuthodId: b.AuthorID,
+		},
+	}, nil
 }

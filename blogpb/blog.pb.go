@@ -8,6 +8,8 @@ import (
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
 	grpc "google.golang.org/grpc"
+	codes "google.golang.org/grpc/codes"
+	status "google.golang.org/grpc/status"
 	math "math"
 )
 
@@ -85,8 +87,88 @@ func (m *Blog) GetAuthodId() string {
 	return ""
 }
 
+type NewBlogRequest struct {
+	Blog                 *Blog    `protobuf:"bytes,1,opt,name=blog,proto3" json:"blog,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *NewBlogRequest) Reset()         { *m = NewBlogRequest{} }
+func (m *NewBlogRequest) String() string { return proto.CompactTextString(m) }
+func (*NewBlogRequest) ProtoMessage()    {}
+func (*NewBlogRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1cd072c3eda6f7ba, []int{1}
+}
+
+func (m *NewBlogRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_NewBlogRequest.Unmarshal(m, b)
+}
+func (m *NewBlogRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_NewBlogRequest.Marshal(b, m, deterministic)
+}
+func (m *NewBlogRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NewBlogRequest.Merge(m, src)
+}
+func (m *NewBlogRequest) XXX_Size() int {
+	return xxx_messageInfo_NewBlogRequest.Size(m)
+}
+func (m *NewBlogRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_NewBlogRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_NewBlogRequest proto.InternalMessageInfo
+
+func (m *NewBlogRequest) GetBlog() *Blog {
+	if m != nil {
+		return m.Blog
+	}
+	return nil
+}
+
+type NewBlogResponse struct {
+	Blog                 *Blog    `protobuf:"bytes,1,opt,name=blog,proto3" json:"blog,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *NewBlogResponse) Reset()         { *m = NewBlogResponse{} }
+func (m *NewBlogResponse) String() string { return proto.CompactTextString(m) }
+func (*NewBlogResponse) ProtoMessage()    {}
+func (*NewBlogResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_1cd072c3eda6f7ba, []int{2}
+}
+
+func (m *NewBlogResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_NewBlogResponse.Unmarshal(m, b)
+}
+func (m *NewBlogResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_NewBlogResponse.Marshal(b, m, deterministic)
+}
+func (m *NewBlogResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_NewBlogResponse.Merge(m, src)
+}
+func (m *NewBlogResponse) XXX_Size() int {
+	return xxx_messageInfo_NewBlogResponse.Size(m)
+}
+func (m *NewBlogResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_NewBlogResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_NewBlogResponse proto.InternalMessageInfo
+
+func (m *NewBlogResponse) GetBlog() *Blog {
+	if m != nil {
+		return m.Blog
+	}
+	return nil
+}
+
 func init() {
 	proto.RegisterType((*Blog)(nil), "blog.Blog")
+	proto.RegisterType((*NewBlogRequest)(nil), "blog.NewBlogRequest")
+	proto.RegisterType((*NewBlogResponse)(nil), "blog.NewBlogResponse")
 }
 
 func init() {
@@ -94,17 +176,21 @@ func init() {
 }
 
 var fileDescriptor_1cd072c3eda6f7ba = []byte{
-	// 146 bytes of a gzipped FileDescriptorProto
+	// 212 bytes of a gzipped FileDescriptorProto
 	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x4c, 0xca, 0xc9, 0x4f,
 	0x2f, 0x48, 0xd2, 0x07, 0x51, 0x7a, 0x05, 0x45, 0xf9, 0x25, 0xf9, 0x42, 0x2c, 0x20, 0xb6, 0x52,
 	0x32, 0x17, 0x8b, 0x53, 0x4e, 0x7e, 0xba, 0x10, 0x1f, 0x17, 0x53, 0x66, 0x8a, 0x04, 0xa3, 0x02,
 	0xa3, 0x06, 0x67, 0x10, 0x53, 0x66, 0x8a, 0x90, 0x08, 0x17, 0x6b, 0x49, 0x66, 0x49, 0x4e, 0xaa,
 	0x04, 0x13, 0x58, 0x08, 0xc2, 0x11, 0x92, 0xe0, 0x62, 0x4f, 0xce, 0xcf, 0x2b, 0x49, 0xcd, 0x2b,
 	0x91, 0x60, 0x06, 0x8b, 0xc3, 0xb8, 0x42, 0xd2, 0x5c, 0x9c, 0x89, 0xa5, 0x25, 0x19, 0xf9, 0x29,
-	0xf1, 0x99, 0x29, 0x12, 0x2c, 0x60, 0x39, 0x0e, 0x88, 0x80, 0x67, 0x8a, 0x11, 0x2f, 0x17, 0x37,
-	0xc8, 0x92, 0xe0, 0xd4, 0xa2, 0xb2, 0xcc, 0xe4, 0x54, 0x27, 0x8e, 0x28, 0x36, 0x88, 0x73, 0x92,
-	0xd8, 0xc0, 0x4e, 0x31, 0x06, 0x04, 0x00, 0x00, 0xff, 0xff, 0x9b, 0x48, 0xb9, 0x44, 0x9f, 0x00,
-	0x00, 0x00,
+	0xf1, 0x99, 0x29, 0x12, 0x2c, 0x60, 0x39, 0x0e, 0x88, 0x80, 0x67, 0x8a, 0x92, 0x01, 0x17, 0x9f,
+	0x5f, 0x6a, 0x39, 0xc8, 0x9e, 0xa0, 0xd4, 0xc2, 0xd2, 0xd4, 0xe2, 0x12, 0x21, 0x39, 0x2e, 0xb0,
+	0xf5, 0x60, 0x0b, 0xb9, 0x8d, 0xb8, 0xf4, 0xc0, 0xee, 0x02, 0x2b, 0x80, 0x38, 0xcb, 0x90, 0x8b,
+	0x1f, 0xae, 0xa3, 0xb8, 0x20, 0x3f, 0xaf, 0x38, 0x95, 0x90, 0x16, 0x23, 0x57, 0x2e, 0x6e, 0x10,
+	0x2f, 0x38, 0xb5, 0xa8, 0x2c, 0x33, 0x39, 0x55, 0xc8, 0x8c, 0x8b, 0x1d, 0x6a, 0x82, 0x90, 0x08,
+	0x44, 0x2d, 0xaa, 0x13, 0xa4, 0x44, 0xd1, 0x44, 0x21, 0xd6, 0x38, 0x71, 0x44, 0xb1, 0x41, 0xc2,
+	0x2a, 0x89, 0x0d, 0x1c, 0x4e, 0xc6, 0x80, 0x00, 0x00, 0x00, 0xff, 0xff, 0x95, 0x93, 0xff, 0xd1,
+	0x3c, 0x01, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -119,6 +205,7 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type BlogServiceClient interface {
+	NewBlog(ctx context.Context, in *NewBlogRequest, opts ...grpc.CallOption) (*NewBlogResponse, error)
 }
 
 type blogServiceClient struct {
@@ -129,22 +216,59 @@ func NewBlogServiceClient(cc grpc.ClientConnInterface) BlogServiceClient {
 	return &blogServiceClient{cc}
 }
 
+func (c *blogServiceClient) NewBlog(ctx context.Context, in *NewBlogRequest, opts ...grpc.CallOption) (*NewBlogResponse, error) {
+	out := new(NewBlogResponse)
+	err := c.cc.Invoke(ctx, "/blog.BlogService/NewBlog", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // BlogServiceServer is the server API for BlogService service.
 type BlogServiceServer interface {
+	NewBlog(context.Context, *NewBlogRequest) (*NewBlogResponse, error)
 }
 
 // UnimplementedBlogServiceServer can be embedded to have forward compatible implementations.
 type UnimplementedBlogServiceServer struct {
 }
 
+func (*UnimplementedBlogServiceServer) NewBlog(ctx context.Context, req *NewBlogRequest) (*NewBlogResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NewBlog not implemented")
+}
+
 func RegisterBlogServiceServer(s *grpc.Server, srv BlogServiceServer) {
 	s.RegisterService(&_BlogService_serviceDesc, srv)
+}
+
+func _BlogService_NewBlog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewBlogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(BlogServiceServer).NewBlog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/blog.BlogService/NewBlog",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(BlogServiceServer).NewBlog(ctx, req.(*NewBlogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 var _BlogService_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "blog.BlogService",
 	HandlerType: (*BlogServiceServer)(nil),
-	Methods:     []grpc.MethodDesc{},
-	Streams:     []grpc.StreamDesc{},
-	Metadata:    "blogpb/blog.proto",
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "NewBlog",
+			Handler:    _BlogService_NewBlog_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "blogpb/blog.proto",
 }
